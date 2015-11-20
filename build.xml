@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- You may freely edit this file. See commented blocks below for -->
+<!-- some examples of how to customize the build. -->
+<!-- (If you delete it and reopen the project it will be recreated.) -->
+<!-- By default, only the Clean and Build commands use this build script. -->
+<!-- Commands such as Run, Debug, and Test only use this build script if -->
+<!-- the Compile on Save feature is turned off for the project. -->
+<!-- You can turn off the Compile on Save (or Deploy on Save) setting -->
+<!-- in the project's Project Properties dialog box.-->
+<project name="calc" default="executable_junit" basedir=".">
+    <description>Builds, tests, and runs the project Calculatrice.</description>
+	
+	<property name="src.dir" value="${basedir}/src/calc/" />
+	<property name="test.dir" value="${basedir}/tests/calc" />
+	<property name="bin.dir" value="${basedir}/bin" />
+	<property name="test.reports.dir" value="reports/junit" />
+	
+	<!-- Define the classpath which includes the junit.jar and the classes after compiling--> 
+	<path id="junit.class.path"> 
+		<pathelement location="D:\Programmes\eclipse\plugins\org.junit_4.12.0.v201504281640\junit.jar" /> 
+		<pathelement location="${bin.dir}" /> 
+	</path> 
+	
+    <target name="clean" description="Delete all generated files">
+        <delete dir="${bin.dir}"/>
+		<delete dir="reports/junit"/>
+    </target>
+	
+	<!-- Compilation du projet Java -->
+	<target name="compile" depends="clean">
+		<mkdir dir="${bin.dir}"/>
+		<!-- Compile Project -->
+		<javac srcdir="${src.dir}" destdir="${bin.dir}" includeantruntime="false">
+			<classpath refid="junit.class.path" />
+		</javac>
+		<!-- Compile Test Project -->
+		<javac srcdir="${test.dir}" destdir="${bin.dir}" includeantruntime="false">
+			<classpath refid="junit.class.path" />
+		</javac>
+	</target>	
+	
+	<target name="executable_junit" depends="compile">
+		<echo>Lancement des tests Junit</echo>
+		<mkdir dir="reports/junit" />
+		<echo>Création du dossier des reports de Junit</echo>
+			<junit printsummary="on" fork="yes" haltonfailure="no">
+				<classpath refid="junit.class.path"/>
+				<classpath location="${bin.dir}" />
+				<formatter type="xml"/>
+				<batchtest fork="yes" todir="${test.reports.dir}">
+					<fileset dir="${bin.dir}">
+						<include name="**/*Test.class"/>
+					</fileset>
+				</batchtest>
+			</junit>
+	
+	</target>
+	
+	
+
+</project>
